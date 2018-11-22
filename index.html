@@ -9,27 +9,28 @@
     <link rel="stylesheet" href="./css/leaflet.css" />
     <script>
         var app = angular.module("demoapp", ['ui-leaflet']);
-        app.controller('MarkersSimpleController', [ '$scope', function($scope) {
-            var mainMarker = {
-                lat: 51,
-                lng: 0,
+        app.controller('MarkersSimpleController', [ '$scope','$http', function($scope, $http) {
+            var mainMarker1 = {
+                lat: 3.8404,
+                lng: 11.50921,
                 focus: true,
                 message: "Hey, drag me if you want",
-                draggable: true
+                draggable: true,
+                zoom: 12
             };
 
-            angular.extend($scope, {
-                london: {
-                    lat: 51.505,
-                    lng: -0.09,
-                    zoom: 8
+            /* angular.extend($scope, {
+                yaounde: {
+                    lat: 3.8404,
+                    lng: 11.50921,
+                    zoom: 4
                 },
                 markers: {
                     mainMarker: angular.copy(mainMarker)
                 },
                 position: {
-                    lat: 51,
-                    lng: 0
+                    lat: 3.8404,
+                    lng: 11.50921
                 },
                 events: { // or just {} //all events
                     markers:{
@@ -37,6 +38,58 @@
                       //logic: 'emit'
                     }
                 }
+            }); */
+
+
+             // Get the countries geojson data from a JSON
+            $http.get("js/CMR_Regions.geo.json").success(function(data, status) {
+                angular.extend($scope, {
+                    geojson: {
+                        data: data,
+                        style: {
+                            fillColor: "teal",
+                            weight: 2,
+                            opacity: 1,
+                            color: 'white',
+                            dashArray: '3',
+                            fillOpacity: 0.7
+                        }
+                    },
+                    yaounde: {
+                        lat: 3.8404,
+                        lng: 11.50921,
+                        zoom: 10
+                    },
+                    douala : {
+                        lat: 4.0511,
+                        lng: 9.7679,
+                        zoom: 10
+                        },
+                markers: {
+                    mainMarker: angular.copy(mainMarker1), 
+                    douala : {
+                        lat: 4.0511,
+                        lng: 9.7679,
+                        zoom: 10
+                        },
+                    CMR : {
+                        lat: 7.3697,
+                        lng: 12.3547,
+                        zoom: 10
+                    },
+                },
+                position: {
+                    lat: 3.8404,
+                    lng: 11.50921,
+                    zoom: 10
+                },
+                events: { // or just {} //all events
+                    markers:{
+                      enable: [ 'dragend' ]
+                      //logic: 'emit'
+                    }
+                }
+                });
             });
 
             $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
@@ -50,10 +103,11 @@
   <body ng-controller="MarkersSimpleController">
     <!-- <leaflet lf-center="london" markers="markers" height="480px" width="100%"></leaflet> EVENTS WILL STILL FIRE but all will for each directive-->
     <!-- NOTICE events attribute is optional it is more for options in whitelisting (enable), blacklisting (disable), and logic (emit or broadcast)  -->
-    <leaflet lf-center="london" event-broadcast="events" markers="markers" height="480px" width="100%"></leaflet>
-    <h1>Markers simple example</h1>
+    <leaflet center="yaounde"  markers="markers" geojson="geojson" height="680px" width="100%"></leaflet>
+    <h1>Demo simple example</h1>
     <p>Initial marker position (lat/lng): <strong ng-bind="markers.mainMarker.lat"></strong> / <strong ng-bind="markers.mainMarker.lng"></strong></p>
     <p>Actual marker position (lat/lng): <strong  ng-bind="position.lat"></strong> / <strong ng-bind="position.lng"></strong></p>
+    <p>Current Zoom Level: <strong ng-bind="markers.mainMarker.zoom"></strong></p>
     </p>
   </body>
 </html>
