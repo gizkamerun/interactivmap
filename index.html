@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html ng-app="demoapp">
   <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="./js/angular.min.js"></script>
     <script src="./js/leaflet.js"></script>
     <script src="./js/angular-simple-logger.js"></script>
@@ -14,10 +16,18 @@
                 lat: 3.8404,
                 lng: 11.50921,
                 focus: true,
-                message: "Hey, drag me if you want",
+                message: "Hey ! You can drag me !!",
                 draggable: true,
-                zoom: 12
+                zoom: 15
             };
+
+            $scope.mainMarker = mainMarker1;
+
+            $scope.center =  {
+                            lat: 3.8404,
+                            lng: 11.50921,
+                            zoom: 9
+                        };
 
             /* angular.extend($scope, {
                 yaounde: {
@@ -44,6 +54,7 @@
              // Get the countries geojson data from a JSON
             $http.get("js/CMR_Regions.geo.json").success(function(data, status) {
                 angular.extend($scope, {
+                   
                     geojson: {
                         data: data,
                         style: {
@@ -58,30 +69,35 @@
                     yaounde: {
                         lat: 3.8404,
                         lng: 11.50921,
-                        zoom: 10
+                        message: "Project Title #1",
+                        zoom: 15
                     },
                     douala : {
                         lat: 4.0511,
                         lng: 9.7679,
-                        zoom: 10
+                        message: "Project Title #3",
+                        zoom: 14
                         },
                 markers: {
                     mainMarker: angular.copy(mainMarker1), 
                     douala : {
+                        focus: false,
                         lat: 4.0511,
                         lng: 9.7679,
-                        zoom: 10
+                        message: "Project Title #1",
+                        zoom: 14
                         },
                     CMR : {
                         lat: 7.3697,
                         lng: 12.3547,
-                        zoom: 10
+                        message: "Project Title #2",
+                        zoom: 14
                     },
                 },
                 position: {
                     lat: 3.8404,
                     lng: 11.50921,
-                    zoom: 10
+                    zoom: 15
                 },
                 events: { // or just {} //all events
                     markers:{
@@ -103,11 +119,13 @@
   <body ng-controller="MarkersSimpleController">
     <!-- <leaflet lf-center="london" markers="markers" height="480px" width="100%"></leaflet> EVENTS WILL STILL FIRE but all will for each directive-->
     <!-- NOTICE events attribute is optional it is more for options in whitelisting (enable), blacklisting (disable), and logic (emit or broadcast)  -->
-    <leaflet center="yaounde"  markers="markers" geojson="geojson" height="680px" width="100%"></leaflet>
+    <leaflet lf-center="center"  markers="markers" geojson="geojson" height="680px" width="100%"></leaflet>
     <h1>Demo simple example</h1>
-    <p>Initial marker position (lat/lng): <strong ng-bind="markers.mainMarker.lat"></strong> / <strong ng-bind="markers.mainMarker.lng"></strong></p>
+    <p>Initial marker position (lat/lng): <strong ng-bind="mainMarker.lat"></strong> / <strong ng-bind="mainMarker.lng"></strong></p>
     <p>Actual marker position (lat/lng): <strong  ng-bind="position.lat"></strong> / <strong ng-bind="position.lng"></strong></p>
-    <p>Current Zoom Level: <strong ng-bind="markers.mainMarker.zoom"></strong></p>
+    <p>Current Zoom Level: <strong ng-bind="center.zoom"></strong></p>
     </p>
+
+    <p> {{center}} </p>
   </body>
 </html>
