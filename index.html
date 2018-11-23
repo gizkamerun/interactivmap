@@ -18,7 +18,7 @@
                 focus: true,
                 message: "Hey ! You can drag me !!",
                 draggable: true,
-                zoom: 15
+                zoom: 9
             };
 
             $scope.mainMarker = mainMarker1;
@@ -26,7 +26,7 @@
             $scope.center =  {
                             lat: 3.8404,
                             lng: 11.50921,
-                            zoom: 9
+                            zoom: 8
                         };
 
             /* angular.extend($scope, {
@@ -70,28 +70,40 @@
                         lat: 3.8404,
                         lng: 11.50921,
                         message: "Project Title #1",
-                        zoom: 15
+                        zoom: 9
                     },
                     douala : {
                         lat: 4.0511,
                         lng: 9.7679,
                         message: "Project Title #3",
-                        zoom: 14
+                        zoom: 9
                         },
                 markers: {
                     mainMarker: angular.copy(mainMarker1), 
                     douala : {
                         focus: false,
-                        lat: 4.0511,
+                        icon : {
+                                   iconUrl: 'https://img.icons8.com/color/50/000000/marker.png', //https://img.icons8.com/ultraviolet/50/000000/marker.png
+                                    //shadowUrl: 'examples/img/leaf-shadow.png',
+                                    iconSize:     [38, 38] // size of the icon
+                            },
+                         lat: 4.0511,
                         lng: 9.7679,
                         message: "Project Title #1",
-                        zoom: 14
+                        html : ' Lorem ipsumm ... ',
+                        zoom: 9
                         },
                     CMR : {
+                        icon : {
+                                   iconUrl: 'https://img.icons8.com/ultraviolet/50/000000/marker.png', //
+                                    //shadowUrl: 'examples/img/leaf-shadow.png',
+                                    iconSize:     [38, 38] // size of the icon
+                            },
                         lat: 7.3697,
                         lng: 12.3547,
                         message: "Project Title #2",
-                        zoom: 14
+                        html : ' Lorem ipsumm Lorem ipsumm ... ',
+                        zoom: 9
                     },
                 },
                 position: {
@@ -101,8 +113,8 @@
                 },
                 events: { // or just {} //all events
                     markers:{
-                      enable: [ 'dragend' ]
-                      //logic: 'emit'
+                      enable: [ 'dragend', 'click' , 'mouseup'], 
+                      logic: 'emit'
                     }
                 }
                 });
@@ -113,6 +125,23 @@
                 $scope.position.lng = args.model.lng;
             });
 
+             $scope.$on("leafletDirectiveMarker.click", function(event, args){
+                $scope.position.lat = args.model.lat;
+                $scope.position.lng = args.model.lng;
+                
+                //$scope.center.lat = args.model.lat;
+                //$scope.center.lng = args.model.lng;
+
+                $scope.center = angular.copy(args.model);
+                $scope.center.zoom = 8;
+
+            });
+
+            /* $scope.$on(mainMarker1.click, function(event, args){
+                $scope.position.lat = mainMarker1.lat;
+                $scope.position.lng = mainMarker1.lng;
+            }); */
+
         } ]);
     </script>
   </head>
@@ -120,12 +149,12 @@
     <!-- <leaflet lf-center="london" markers="markers" height="480px" width="100%"></leaflet> EVENTS WILL STILL FIRE but all will for each directive-->
     <!-- NOTICE events attribute is optional it is more for options in whitelisting (enable), blacklisting (disable), and logic (emit or broadcast)  -->
     <leaflet lf-center="center"  markers="markers" geojson="geojson" height="680px" width="100%"></leaflet>
-    <h1>Demo simple example</h1>
+    <h1>Interrative map example </h1>
     <p>Initial marker position (lat/lng): <strong ng-bind="mainMarker.lat"></strong> / <strong ng-bind="mainMarker.lng"></strong></p>
     <p>Actual marker position (lat/lng): <strong  ng-bind="position.lat"></strong> / <strong ng-bind="position.lng"></strong></p>
     <p>Current Zoom Level: <strong ng-bind="center.zoom"></strong></p>
     </p>
-
-    <p> {{center}} </p>
+    <h2 ng-bind="center.message">Location details: </h2>
+                <p> {{center.html}}</p>
   </body>
 </html>
